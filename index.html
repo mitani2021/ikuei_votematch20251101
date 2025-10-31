@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ミタニ市長選挙 ボートマッチ</title>
+  <title>ミタニ市長選挙 ボートマッチ（最新版）</title>
   <style>
     :root{
       --bg:#ffffff; --fg:#111111; --muted:#5f6b7a; --card:#ffffff; --line:#e5e7eb;
-      --accent:#2563eb; --accent2:#16a34a; --danger:#ef4444; --warn:#f59e0b; --ok:#16a34a
+      --accent:#2563eb; --accent2:#16a34a; --danger:#ef4444; --warn:#f59e0b
     }
     *{box-sizing:border-box}
     html,body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.6}
@@ -20,16 +20,13 @@
     h2{margin:.2rem 0 .6rem}
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0}
     .grid{display:grid;gap:12px}
-    @media(min-width:720px){.grid.cols-2{grid-template-columns:1fr 1fr}}
     .q{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fafafa}
     .q h3{margin:.2rem 0 .6rem;font-size:1rem}
     .opts{display:flex;flex-wrap:wrap;gap:8px}
     .opt{display:flex;gap:6px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
-    .badge{font-size:.75rem;color:var(--muted)}
     button{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
     .primary{background:var(--accent);color:#fff}
     .ghost{background:#fff;color:var(--fg);border:1px solid var(--line)}
-    .danger{background:var(--danger);color:#fff}
     .muted{color:var(--muted)}
     .bar{height:12px;background:#f3f4f6;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
     .bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#60a5fa);width:0%}
@@ -38,7 +35,7 @@
     .res-card{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}
     .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:#f8fafc;font-size:.75rem;color:var(--muted)}
     table{width:100%;border-collapse:collapse;background:#fff}
-    th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left}
+    th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
     .small{font-size:.9rem}
     .footer{font-size:.85rem;color:var(--muted);text-align:center;margin:24px 0}
     .hint{font-size:.9rem;color:var(--muted)}
@@ -54,14 +51,14 @@
     <div class="container brand">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <h1>ミタニ市長選挙 ボートマッチ</h1>
+        <h1>ミタニ市長選挙 ボートマッチ（最新版）</h1>
       </div>
     </div>
   </header>
 
   <main class="container">
     <section class="card">
-      <p class="small">ミタニ市は2000年にX市・Y町・Z村が合併して誕生しました。現在は、<strong>X地区・Y地区・Z地区</strong>の3地区で構成されています。Z地区にはいわゆる迷惑施設が集中しています。2025年、Z地区のゴミ焼却炉の火災事故が起こり、<strong>新しく設置する場所</strong>が今度のミタニ市長選挙の争点になっています。</p>
+      <p class="small">ミタニ市は2000年にX市・Y町・Z村が合併して誕生。Z地区にはいわゆる迷惑施設が多く立地しています。2025年のZ地区ゴミ焼却炉火災を受け、<strong>新設場所・費用負担・広域委託</strong>が選挙の主要争点です。</p>
       <div class="flex">
         <label for="district">あなたの居住地区：</label>
         <select id="district" aria-label="あなたの地区">
@@ -73,7 +70,7 @@
     </section>
 
     <section id="questions" class="card">
-      <h2>◆ 設問（賛成 / どちらともいえない / 反対）</h2>
+      <h2>◆ 設問（はい / どちらともいえない / いいえ）</h2>
       <div class="hint">未選択の設問はスコア計算から除外されます。</div>
       <div class="grid" id="qList"></div>
 
@@ -102,45 +99,56 @@
   <div class="toast" id="toast"></div>
 
   <script>
-  // ====== 設問と候補者データ ======
+  // ====== 設問（ご指定の6問） ======
   const QUESTIONS = [
     { id:1, text:"新しいゴミ焼却炉は、これまで通りZ地区に建設すべきだと思いますか？" },
-    { id:2, text:"Z地区にはすでに迷惑施設が多いため、新しいゴミ焼却炉は別の地区（X地区やY地区）に建設すべきだと思いますか？" },
-    { id:3, text:"ミタニ市には新しいゴミ焼却炉を建設せず、隣のハセ市に委託すべきだと思いますか？" },
-    { id:4, text:"新しいゴミ焼却炉の建設費用を確保するためには、市民税を増税してもよいと思いますか？" },
-    { id:5, text:"現在の税負担は維持すべきだと思いますか？" },
-    { id:6, text:"ハセ市への委託に必要な大幅増税をしてでも、ミタニ市に焼却炉を作らない方が良いと思いますか？" },
-    { id:7, text:"ミタニ市のゴミの排出量をこれまで以上に減らすべきだと思いますか？" },
-    { id:8, text:"ゴミ焼却炉の整備よりも、リサイクルや再利用の仕組みに力を入れるべきだと思いますか？" },
-    { id:9, text:"公共施設や迷惑施設は、市内の地区ごとに公平に分担して建設されるべきだと思いますか？" },
-    { id:10,text:"『Z地区にばかり負担が集中している』という住民の声に、市として応えるべきだと思いますか？" },
+    { id:2, text:"Z地区にはすでに多くのNIMBY施設が存在するため、新しいゴミ焼却炉は別の地区に建設すべきだと思いますか？" },
+    { id:3, text:"『Z地区にばかり負担が集中している』という住民の声に、市として応えるべきだと思いますか？" },
+    { id:4, text:"ミタニ市には新しいゴミ焼却炉を建設せず、隣のハセ市に委託すべきだと思いますか？" },
+    { id:5, text:"現在の住民税の負担額を引き上げることに賛成ですか？" },
+    { id:6, text:"ミタニ市のゴミの排出量を減らすべきだと思いますか？" },
   ];
 
-  // 数値化マップ：賛成(はい)=+1 / 中立=0 / 反対(いいえ)=-1
-  const MAP = { "はい":1, "賛成":1, "どちらともいえない":0, "反対":-1, "いいえ":-1 };
+  // 表示ラベル
+  const ANSWER_LABELS = ["はい","どちらともいえない","いいえ"];
+  // 数値化：はい=+1 / 中立=0 / いいえ=-1
+  const MAP = { "はい":1, "どちらともいえない":0, "いいえ":-1 };
 
-  // 候補者と回答
+  // ====== 候補者と回答（ご指定どおり） ======
   const CANDIDATES = [
     { key:"kanzaki", name:"神崎 豪", color:"linear-gradient(90deg,#60a5fa,#3b82f6)", answers:{
-      1:"はい",2:"いいえ",3:"いいえ",4:"はい",5:"いいえ",6:"いいえ",7:"いいえ",8:"どちらともいえない",9:"いいえ",10:"いいえ"
+      1:"はい",
+      2:"いいえ",
+      3:"いいえ",
+      4:"いいえ",
+      5:"はい",
+      6:"どちらともいえない"
     }},
     { key:"kazama", name:"風間 裕也", color:"linear-gradient(90deg,#86efac,#16a34a)", answers:{
-      1:"いいえ",2:"はい",3:"いいえ",4:"いいえ",5:"はい",6:"いいえ",7:"どちらともいえない",8:"どちらともいえない",9:"はい",10:"はい"
+      1:"いいえ",
+      2:"はい",
+      3:"はい",
+      4:"いいえ",
+      5:"いいえ",
+      6:"どちらともいえない"
     }},
     { key:"himejima", name:"姫島 ノエル", color:"linear-gradient(90deg,#fde68a,#f59e0b)", answers:{
-      1:"いいえ",2:"どちらともいえない",3:"はい",4:"はい",5:"いいえ",6:"はい",7:"はい",8:"はい",9:"はい",10:"はい"
+      1:"いいえ",
+      2:"どちらともいえない",
+      3:"はい",
+      4:"はい",
+      5:"はい",
+      6:"はい"
     }}
   ];
 
-  // ====== UI 生成 ======
+  // ====== UI生成 ======
   const qList = document.getElementById('qList');
   const results = document.getElementById('results');
   const scoreCards = document.getElementById('scoreCards');
   const detailsTable = document.getElementById('detailsTable');
   const winnerLine = document.getElementById('winnerLine');
   const toast = document.getElementById('toast');
-
-  const ANSWERS = ["賛成","どちらともいえない","反対"]; // 表示順
 
   function makeQuestion(q){
     const wrap = document.createElement('div');
@@ -151,41 +159,38 @@
 
     const opts = document.createElement('div');
     opts.className = 'opts';
-    for (const label of ANSWERS){
+    for (const label of ANSWER_LABELS){
       const id = `q${q.id}-${label}`;
       const el = document.createElement('label');
       el.className = 'opt';
       el.innerHTML = `<input type="radio" name="q${q.id}" id="${id}" value="${label}"> <span>${label}</span>`;
       opts.appendChild(el);
     }
-
     wrap.appendChild(opts);
     return wrap;
   }
 
   function renderQuestions(){
     qList.innerHTML = '';
-    QUESTIONS.forEach(q=> qList.appendChild(makeQuestion(q)) );
+    QUESTIONS.forEach(q=> qList.appendChild(makeQuestion(q)));
   }
-
   renderQuestions();
 
   // ====== スコア計算 ======
-  // 距離ベースの類似度： user(U)とcandidate(C)の差 d=|U-C|
-  // 類似度 s = (2 - d) / 2  => 完全一致1 / 片方中立0.5 / 真逆0
+  // 類似度：U,C∈{-1,0,1} として d=|U-C|, s=(2-d)/2 → 一致1 / 片方中立0.5 / 真逆0
   function similarity(u, c){
     const d = Math.abs(u - c);
-    return (2 - d) / 2; // 1, 0.5, 0
+    return (2 - d) / 2;
   }
 
   function calcScores(){
-    const user = {};      // { qid: value(-1..1) }
+    const user = {};
     let answered = 0;
 
     for (const q of QUESTIONS){
       const sel = document.querySelector(`input[name="q${q.id}"]:checked`);
-      if (!sel) continue; // 未選択は除外
-      const v = sel.value === '賛成' ? 1 : sel.value === 'どちらともいえない' ? 0 : -1;
+      if (!sel) continue;
+      const v = MAP[sel.value];
       user[q.id] = v; answered++;
     }
 
@@ -193,15 +198,14 @@
       let score = 0, denom = 0;
       const perQ = [];
       for (const q of QUESTIONS){
-        if (user[q.id] === undefined) { perQ.push({qid:q.id, s:null}); continue; }
+        if (user[q.id] === undefined){ perQ.push({qid:q.id, s:null}); continue; }
         const u = user[q.id];
-        const ca = MAP[c.answers[q.id]]; // -1..1
+        const ca = MAP[c.answers[q.id]];
         const s = similarity(u, ca);
-        score += s;
-        denom += 1;
+        score += s; denom += 1;
         perQ.push({qid:q.id, s, user:u, cand:ca});
       }
-      const pct = denom ? Math.round((score / denom) * 100) : 0;
+      const pct = denom ? Math.round((score/denom)*100) : 0;
       return { key:c.key, name:c.name, color:c.color, pct, perQ };
     });
 
@@ -220,6 +224,7 @@
       ? `あなた（<span class="pill">${district}</span>）に最も近いのは <strong>${top.name}</strong>（一致度 <strong>${top.pct}%</strong>）。`
       : 'まだ選択されていない設問があります。回答すると一致度を計算できます。';
 
+    // スコアカード
     scoreCards.innerHTML = '';
     perCandidate.forEach(c =>{
       const card = document.createElement('div');
@@ -242,7 +247,7 @@
     for (const q of QUESTIONS){
       const sel = document.querySelector(`input[name="q${q.id}"]:checked`);
       const my = sel ? sel.value : '未選択';
-      const icon = v => v==='賛成'||v==='はい' ? '◎' : v==='どちらともいえない' ? '△' : v==='未選択' ? '—' : '×';
+      const icon = v => v==='はい' ? '◎' : v==='どちらともいえない' ? '△' : v==='未選択' ? '—' : '×';
       html += `<tr><td>${q.id}. ${q.text}</td><td>${icon(my)} ${my}</td><td>${icon(CANDIDATES[0].answers[q.id])} ${CANDIDATES[0].answers[q.id]}</td><td>${icon(CANDIDATES[1].answers[q.id])} ${CANDIDATES[1].answers[q.id]}</td><td>${icon(CANDIDATES[2].answers[q.id])} ${CANDIDATES[2].answers[q.id]}</td></tr>`;
     }
     html += '</tbody></table>';
@@ -274,5 +279,3 @@
   </script>
 </body>
 </html>
-
-
