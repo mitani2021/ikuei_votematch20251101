@@ -59,6 +59,18 @@
   <main class="container">
     <section class="card">
       <p class="small">現在ミタニ市長選挙が行われています。Z地区にはいわゆるNIMBY施設が多く立地しています。先日のZ地区のゴミ焼却炉の火災事故を受け、<strong>新しいゴミ焼却炉の設置場所や費用負担</strong>が、次の市長選挙の主要争点です。</p>
+
+
+      <div class="flex">
+        <label for="district">あなたの居住地区：</label>
+        <select id="district" aria-label="あなたの地区">
+          <option value="X">X地区</option>
+          <option value="Y">Y地区</option>
+          <option value="Z">Z地区</option>
+        </select>
+      </div>
+    </section>
+
     <section id="questions" class="card">
       <h2>◆ 設問（はい / どちらともいえない / いいえ）</h2>
       <div class="hint">未選択の設問はスコア計算から除外されます。</div>
@@ -269,4 +281,3 @@
   </script>
 </body>
 </html>
-
